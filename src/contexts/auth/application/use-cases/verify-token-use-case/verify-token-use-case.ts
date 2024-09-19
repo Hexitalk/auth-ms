@@ -14,7 +14,7 @@ export class VerifyTokenUseCase {
 
   constructor(
     private readonly jwtService: JwtService,
-    private readonly signTokenService: SignTokenService,
+    // private readonly signTokenService: SignTokenService,
   ) {}
 
   async run(
@@ -32,7 +32,7 @@ export class VerifyTokenUseCase {
 
       return {
         user: user,
-        token: await this.signTokenService.sign(user),
+        // token: await this.signTokenService.sign(user),
       };
     } catch (error) {
       if (error.name && error.name === 'TokenExpiredError') {

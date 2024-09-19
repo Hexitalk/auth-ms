@@ -116,6 +116,23 @@ export class RegisterUserUseCase {
 
       // //////////////
 
+      const payloadCreateHub: NatsPayloadInterface<void> = {
+        ...config,
+        authUserId: createdUser.id,
+        data: undefined,
+      };
+
+      const createHubNatsResponse = await firstValueFrom(
+        this.client.send({ cmd: 'hub.create-hub' }, payloadCreateHub),
+      );
+
+      if (!createHubNatsResponse) {
+        throw new RpcException({
+          status: 400,
+          message: 'Hub create fail from Auth-RegisterUserUseCase',
+        });
+      }
+
       return {
         user: updatedUser,
         profile: createdProfile,

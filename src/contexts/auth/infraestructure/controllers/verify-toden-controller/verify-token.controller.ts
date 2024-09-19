@@ -7,7 +7,7 @@ import { NatsPayloadInterface } from 'src/contexts/shared/nats/interfaces';
 export class VerifyTokenController {
   constructor(private readonly verifyTokenUseCase: VerifyTokenUseCase) {}
 
-  @MessagePattern({ cmd: 'auth.verify-user' })
+  @MessagePattern({ cmd: 'auth.verify-token' })
   verifyToken(@Payload() payload: NatsPayloadInterface<string>) {
     const { data: token, ...config } = payload;
     return this.verifyTokenUseCase.run(token, config);
