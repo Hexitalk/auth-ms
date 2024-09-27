@@ -27,8 +27,6 @@ export class VerifyTokenAndUpdateSocketUseCase {
     dto: VerifyTokenAndUpdateSocketDto,
     @NatsPayloadConfig() config?: NatsPayloadConfigInterface,
   ) {
-    // console.log({ dto });
-
     try {
       const { sub, iat, exp, ...user } = this.jwtService.verify(dto.token, {
         secret: envs.jwtSecret,

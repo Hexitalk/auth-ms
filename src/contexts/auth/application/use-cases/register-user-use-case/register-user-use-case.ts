@@ -116,10 +116,12 @@ export class RegisterUserUseCase {
 
       // //////////////
 
-      const payloadCreateHub: NatsPayloadInterface<void> = {
+      const payloadCreateHub: NatsPayloadInterface<{
+        originProfileId: string;
+      }> = {
         ...config,
         authUserId: createdUser.id,
-        data: undefined,
+        data: { originProfileId: createdProfile.id },
       };
 
       const createHubNatsResponse = await firstValueFrom(
