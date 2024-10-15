@@ -33,5 +33,4 @@ export const envs = {
   natsServers: envVars.NATS_SERVERS,
 
   jwtSecret: envVars.JWT_SECRET,
-
 };

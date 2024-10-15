@@ -9,17 +9,24 @@ COPY package-lock.json ./
 RUN npm install
 
 
-
-
-# Builder - Construye la aplicación
+# Builder
 FROM node:21-alpine3.19 as build
 
 WORKDIR /usr/src/app
 
-# Copiar de deps, los módulos de node
+ARG AUTH_MS_PORT
+ARG NATS_PORT
+ARG JWT_SECRET
+
+ENV PORT=${AUTH_MS_PORT}
+ENV NATS_SERVERS=nats://nats-server:${NATS_PORT}
+ENV JWT_SECRET=${JWT_SECRET}
+
+
+# copy node modules
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 
-# Copiar todo el codigo fuente de la aplicación
+# copy all app code files
 COPY . .
 
 # RUN npm run test
@@ -27,23 +34,19 @@ RUN npm run build
 
 RUN npm ci -f --only=production && npm cache clean --force
 
-
-# Crear la imagen final de Docker
+# Create final docker image
 FROM node:21-alpine3.19 as prod
 
 WORKDIR /usr/src/app
 
 
 COPY --from=build /usr/src/app/node_modules ./node_modules
-
-# Copiar la carpeta de DIST
 COPY --from=build /usr/src/app/dist ./dist
 
 
 ENV NODE_ENV=production
 
 USER node
-
 
 EXPOSE 3000
 
